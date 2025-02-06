@@ -9,16 +9,28 @@ struct user{
 };
 
 struct user* createUsers(int max_number_of_users) {
-    //Your code goes here
+    struct user *arr = malloc(sizeof(struct user) * max_number_of_users);
+    if (arr == NULL) {
+        return NULL;
+    }
+    return arr;
 }
 
 void initUsers(void* users, int max_number_of_users) {
-    //Your code goes here
+    struct user *p = (struct user *)users;
+    for (int i = 0; i < max_number_of_users; i++) {
+        strcpy((p + i)->username, "default");
+        strcpy((p + i)->password, "default");
+        (p + i)->admin = 0;
+    }
 }
 
 void addUser1(struct user* users, char* username, char* password,
     int admin, int* count) {
-    //Your code goes here
+    strcpy((users + *count)->username, username);
+    strcpy((users + *count)->password, password);
+    (users + *count)->admin, admin;
+    (*count)++;
 }
 
 void addUser2(struct user* users, struct user* newUser, int* count) {
