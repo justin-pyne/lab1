@@ -34,11 +34,17 @@ void addUser1(struct user* users, char* username, char* password,
 }
 
 void addUser2(struct user* users, struct user* newUser, int* count) {
-    //Your code goes here
+    strcpy((users + *count)->username, newUser->username);
+    strcpy((users + *count)->password, newUser->password);
+    (users + *count)->admin, newUser->admin;
+    (*count)++;
 }
 
 void printUser(struct user* users, int number_of_users) {
-    //Your code goes here
+    for (int i =0; i < number_of_users; i++) {
+        printf("username%d : %s\n", i, (users + i)->username);
+        printf("password%d : %s\n", i, (users + i)->password);
+    }
 }
 
 int main(void) {
@@ -55,7 +61,7 @@ int main(void) {
     u1.admin = 2;
     strcpy(u1.username, "usf");
     strcpy(u1.password, "gA24?m");
-    addUser2(users, u1, &userCount);
+    addUser2(users, &u1, &userCount);
     printUser(users, userCount);
     free(users);
     return 0;
