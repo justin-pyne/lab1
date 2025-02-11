@@ -17,17 +17,73 @@ char* cs621Hash(const char* password) {
 }
 
 struct user* createUsers(int* count) {
-    //Your code goes here
+    FILE *fp = fopen("credential_file", "r");
+    if (fp == NULL) { 
+        return NULL;
+    }
+    int lines = 0;
+    int currChar;
+    while ((currChar = fgetc(fp)) != EOF) {
+        if (currChar == '\n'){
+            lines++;
+        }
+    }
+    fclose(fp);
+    struct user *arr = malloc(sizeof(struct user) * lines);
+    if (arr == NULL) {
+        return NULL;
+    }
+    *count = lines;
+    return arr;
 }
 
 void populateUsers(void* users) {
-    //Your code goes here
+    struct user *p = (struct user *)users;
+    FILE *fp = fopen("credential_file", "r");
+    if (fp == NULL) {
+        return;
+    }
+    char line[512];
+    int i = 0;
+        while (fgets(line, sizeof(line), fp) != NULL) {
+            char *token = strtok(line, "\t\n");
+            if (token == NULL) {
+                continue;
+            }
+            strcpy((p + i)->firstname, token);
+            token = strtok(NULL, "\t\n");
+            if (token == NULL) {
+                continue;
+            }
+            strcpy((p + i)->lastname, token);
+
+            token = strtok(NULL, "\t\n");
+            if (token == NULL) {
+                continue;
+            }
+            strcpy((p + i)->username, token);
+
+            token = strtok(NULL, "\t\n");
+            if (token == NULL) {
+                continue;
+            }
+            strcpy((p + i)->password, token);
+
+            token = strtok(NULL, "\t\n");
+            if (token == NULL) {
+                continue;
+            }
+            (p + i)->admin = atoi(token);
+
+            i++;
+        }
+    fclose(fp);
 }
 
 int checkAdminPassword(char* password, struct user* users, int count) {
     for (int i = 0; i < count; ++i) {
         if (strcmp((users + i)->username, "admin") == 0) {
-            if (/*    Complete the condition    */) {
+            if (strcmp((users + i)->password, cs621Hash(password)) == 0) {
                 return 1;
             }
             else {
@@ -39,11 +95,38 @@ int checkAdminPassword(char* password, struct user* users, int count) {
 }
 
 struct user* addUser(struct user* users, int* count, char* username, char* password, char* firstname, char* lastname, int admin) {
-    //Your code goes here
+    int new_count = (*count) + 1;
+    struct user *new_arr = realloc(users, sizeof(struct user) * new_count);
+    if (new_arr == NULL) {
+        perror("Failed to realloc");
+        return NULL;
+    }
+    struct user *insert_at = new_arr + (*count);
+    strcpy(insert_at->username, username);
+    strcpy(insert_at->firstname, firstname);
+    strcpy(insert_at->lastname, lastname);
+    insert_at->admin = admin;
+    char *hashed = cs621Hash(password);
+    strcpy(insert_at->password, hashed);
+    (*count) = new_count;
+    return new_arr;
 }
 
 void saveUsers(struct user* users, int count) {
-    //Your code goes here
+    FILE *fp = fopen("credential_file", "w");
+    if (fp == NULL) {
+        return;
+    }
+    
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%s\t%s\t%s\t%s\t%d\n",
+                (users + i)->firstname,
+                (users + i)->lastname,
+                (users + i)->username,
+                (users + i)->password,
+                (users + i)->admin);
+    }
+    fclose(fp);
 }
 
 int main(void) {

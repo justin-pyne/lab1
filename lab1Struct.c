@@ -42,8 +42,8 @@ void addUser2(struct user* users, struct user* newUser, int* count) {
 
 void printUser(struct user* users, int number_of_users) {
     for (int i =0; i < number_of_users; i++) {
-        printf("username%d : %s\n", i, (users + i)->username);
-        printf("password%d : %s\n", i, (users + i)->password);
+        printf("username%d: %s\n", i, (users + i)->username);
+        printf("password%d: %s\n", i, (users + i)->password);
     }
 }
 
