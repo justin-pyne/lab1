@@ -79,7 +79,7 @@ int main(void) {
     struct user user;
     strcpy(user.username, "admin");
     strcpy(user.password, "s#1Pa5");
-    user.permissions = 0; //Sets the permissions to 0
+    user.permissions = 0;
     grantPermission(0, &user);
     grantPermission(1, &user);
     printPermissions(&user);
